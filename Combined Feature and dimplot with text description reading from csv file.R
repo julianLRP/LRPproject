@@ -1,4 +1,4 @@
-# minimal amount libaries required to run the 
+# minimal amount of libraries required to run this part of Seurat pipeline.
 library(Seurat)
 library(ggplot2)
 library(patchwork)
@@ -62,11 +62,13 @@ for (i in 1:nrow(gene_info_data)) {
     processed_LRP[["gene_of_interest"]] <- ifelse(processed_LRP[["RNA"]]@counts[gene_id,] > 0, gene_id, "Other")
     
     # Create a dim plot for the gene
-    dim_plot <- DimPlot(processed_LRP, group.by = "gene_of_interest") +
+    color_vector <- setNames(c(rgb(1,0,0,alpha=0.5), rgb(0.5,0.5,0.5,alpha=0.5)), c(gene_id, "Other"))
+    dim_plot <- DimPlot(processed_LRP, group.by = "gene_of_interest", pt.size = 3, cols = color_vector) +
       ggtitle(paste0(gene_id, " - ", gene_name))
     
+    
     # Create a description text box
-    wrapped_gene_description <- str_wrap(gene_description, width = 50)  # Adjust the width as needed
+    wrapped_gene_description <- str_wrap(gene_description, width = 80)  # Adjust the width as needed
     description_lines <- str_split(wrapped_gene_description, "\n", simplify = FALSE)[[1]]
     line_count <- length(description_lines)
     
@@ -80,11 +82,11 @@ for (i in 1:nrow(gene_info_data)) {
     
     # Calculate font size based on the number of lines
     if (line_count <= 10) {
-      font_size <- 4
+      font_size <- 5
     } else if (line_count <= 20) {
-      font_size <- 3
+      font_size <- 4
     } else {
-      font_size <- 2
+      font_size <- 3
     }
     
     description_text <- ggplot(data = description_df) +
@@ -99,7 +101,7 @@ for (i in 1:nrow(gene_info_data)) {
       patchwork::plot_layout(ncol = 1, heights = c(2, 2, 1))
     
     # Save the combined plot as a PNG file, specifying a larger width and height
-    ggsave(filename = png_file_name, plot = combined_plot, width = 8, height = 12)
+    ggsave(filename = png_file_name, plot = combined_plot, width = 12, height = 16)
     
     # Remove the gene of interest from the metadata to prevent confusion in the next iteration
     processed_LRP[["gene_of_interest"]] <- NULL
