@@ -38,8 +38,21 @@ ws_binary <- ifelse(ws > 1, 1, 0)
 # Label the watershed image
 cc <- bwlabel(ws_binary)
 
+# Define labels that should be considered as background
+background_labels <- c(2,313, 0,322, 1)
+
+# Set the selected labels as background
+for(label in background_labels) {
+  cc[cc == label] <- 0
+}
+
+writeImage(cc, "labeled_LRP.png")
+
+save(cc, file = "labeled_LRP.RData")
+
 display( colorLabels(cc))
 
+#the following plot is to identify which label integer belongs to which segment via visualization.
 # Convert the labeled image to a data frame
 cc_df <- as.data.frame(as.table(cc))
 
@@ -47,13 +60,18 @@ cc_df <- as.data.frame(as.table(cc))
 centroids <- aggregate(cbind(Var1, Var2) ~ Freq, data = cc_df, FUN = function(x) mean(as.numeric(x)))
 
 # Define your plot and assign it to 'p'
-p <- ggplot(cc_df, aes(x = Var1, y = Var2, fill = Freq)) +
-  geom_tile() +
-  scale_fill_gradient(low = "white", high = "black") +
-  geom_text(data = centroids, aes(x = Var1, y = Var2, label = Freq), size = 1.5, color = "red") +
+p <- ggplot(cc_df, aes(x = Var1, y = as.numeric(as.character(Var2)))) +  # removed fill = Freq
+  geom_text(data = centroids, aes(x = Var1, y = as.numeric(as.character(Var2)), label = Freq), size = 0.5, color = "red") +
   theme_minimal() +
-  theme(axis.text = element_blank(), axis.title = element_blank(), axis.ticks = element_blank())
+  theme(
+    axis.text = element_blank(), 
+    axis.title = element_blank(), 
+    axis.ticks = element_blank(),
+    panel.background = element_rect(fill = "white"),  # set background to white
+    panel.grid = element_blank()  # remove grid lines
+  ) +
+  coord_fixed() +
+  scale_y_reverse()  # Reverse the y-axis
 
 # Save the plot
-ggsave(filename = "labeled_image.png", plot = p, dpi = 300)
-
+ggsave(filename = "labeled_image.png", plot = p, dpi = 500)
