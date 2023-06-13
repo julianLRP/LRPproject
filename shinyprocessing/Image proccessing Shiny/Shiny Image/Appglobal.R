@@ -1,0 +1,6 @@
+#Appglobal.R
+# Define global constants
+# ...
+
+# Load data
+# ...
