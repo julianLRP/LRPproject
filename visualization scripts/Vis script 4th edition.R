@@ -54,7 +54,7 @@ load("labeled_LRP.RData")
 cc_df <- as.data.frame(as.table(cc))
 
 # Load processed LRP dataset
-processed_LRP <- readRDS('Integrated.processed2.rds')
+processed_LRP <- readRDS('LRP.processed2.rds')
 
 # Assign cluster names to labels randomly
 cluster_names <- Idents(processed_LRP)
@@ -64,16 +64,16 @@ label_to_cluster <- data.frame(
 )
 
 #Manual associations between labels and clusters
-label_to_cluster <- data.frame(
-  label = c("label1", "label2", "label3", ...),  # replace with your labels
-  cluster = c("cluster1", "cluster2", "cluster3", ...)  # replace with associated clusters
-)
+#label_to_cluster <- data.frame(
+  #label = c("label1", "label2", "label3", ...),  # replace with your labels
+ # cluster = c("cluster1", "cluster2", "cluster3", ...)  # replace with associated clusters
+#)
 
 # Merge the label to cluster dataframe with the cc_df dataframe
 cc_df <- merge(cc_df, label_to_cluster, by.x = "Freq", by.y = "label")
 
 # Calculate the average gene expression for each pixel
-gene_of_interest <- "AT3G11260"
+gene_of_interest <- "AT1G08560"
 avg_gene_expression <- AverageExpression(object = processed_LRP, assays = "RNA", features = gene_of_interest)
 
 # convert avg_gene_expression list into a data frame
@@ -83,20 +83,17 @@ avg_gene_expression <- as.data.frame(avg_gene_expression)
 avg_gene_expression <- avg_gene_expression %>% 
   gather(key = "cluster", value = gene_of_interest)
 
-#remove the "RNA." prefix from the cluster column
+#remove the "RNA/integrated" prefix from the cluster column
 avg_gene_expression$cluster <- gsub("RNA.", "", avg_gene_expression$cluster)
+avg_gene_expression$cluster <- gsub("integrated.", "", avg_gene_expression$cluster)
+# replace dots and underscores with spaces in the cluster names
+avg_gene_expression$cluster <- gsub("\\.|_", " ", avg_gene_expression$cluster)
 
 # Merge the avg_gene_expression with cc_df
 cc_df <- merge(cc_df, avg_gene_expression, by = "cluster")
 
-# Scale the gene_expression column to between 0 and 1
-cc_df$gene_expression <- scales::rescale(cc_df$gene_expression, to = c(0, 1))
-
 # Set the gene_of_interest value of the pixels with label 0 or 1 to NA this will set all values of the background and the lines to NA.
 cc_df$gene_of_interest[cc_df$Freq %in% c(0, 1)] <- NA
-
-# Scale the gene_expression column to between 0 and 1
-cc_df$gene_expression <- scales::rescale(cc_df$gene_expression, to = c(0, 1))
 
 # Reverse the levels of Var2
 cc_df$Var2 <- factor(cc_df$Var2, levels = rev(levels(cc_df$Var2)))
