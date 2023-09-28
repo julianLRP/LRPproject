@@ -1,3 +1,5 @@
+#this script unloads all libraries expect the basic ones in order to install new packages without closing the R session, sometimes still does not work.
+
 unload_libraries <- function() {
   # Get the list of currently loaded packages
   loaded_packages <- (.packages(all.available = TRUE))
