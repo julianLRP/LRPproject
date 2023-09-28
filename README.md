@@ -10,6 +10,7 @@
 - Combined plot at t set idents res2
 - Quality control seurat
 
+Download the RDS file of the Seuratobject here: https://1drv.ms/u/s!At-tpTVuUZwzgZcT6Z8wi_MWyW76jA?e=3eCWJV
 
 # LRP clustering and spatial visualization Tool
 
