@@ -73,7 +73,7 @@ if (length(dim(img_for_plot)) == 2) {
 # Create a raster graphic with transparency
 g <- rasterGrob(img_for_plot, interpolate=TRUE)
 
-#Set the X an Y location of the labels
+#Set the X an Y location of the labels, this is a texttag to input within the plot, this is specific for this image, labeling has to done manually( for example via computing the X and Y location of the highest label( select manually which labels you want to compate the XY coordinates for and choose a Y location that is slightly higher than that) 
 labels_x <- c(132.0162, 446.6079, 753.2363, 1064.4975, 1384.5490, 1709.9236, 2013.7494, 2350.4541, 2777.3491)
 labels_y <- 1400#keep between Y axis of original image to prevent annotation custom from being misaligned with plotted label pixels
 
