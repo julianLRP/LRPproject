@@ -23,7 +23,7 @@ processed_LRP <- readRDS('LRP.processed2.rds')
 # Read the mapping from the CSV file
 mapping_df <- read.csv("Color_mapping_and_Identity.csv")
 
-# Extract earlymappingbycelltype values
+# Extract earlymappingbycelltype values, depending on the column selected in subclustering for earlymapping script
 label_to_earlymapping <- mapping_df[, c("Label", "earlymappingbycelltype", "LRP_stage")]
 
 colnames(label_to_earlymapping)[which(names(label_to_earlymapping) == "Label")] <- "Freq"
@@ -54,7 +54,7 @@ cc_df$gene_of_interest[cc_df$Freq %in% c(0, 1)] <- NA
 # Reverse the levels of Var2
 cc_df$Var2 <- factor(cc_df$Var2, levels = rev(levels(cc_df$Var2)))
 
-# Read the original image
+# Read the original image, it is important to open the original image in GIMP and set the Alpha channel of the all the white areas(the labeled segments of the image) to be fully transparent ,if you don't the white won't be transparent and the labeling is not visible.
 img_for_plot <- readPNG('LRPstagesall3.png')
 
 ##will execute the overlaying of the original image regardless of gray scale or RGBA image
