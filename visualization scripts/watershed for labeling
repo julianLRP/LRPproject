@@ -4,8 +4,9 @@ library(dplyr)
 library(ggplot2)
 library(magick)
 
+
 # Read the image
-img <- readImage("LRPstagesall.png")
+img <- readImage("LRPstagesall3.png")
 
 # Check if the image is grayscale
 if (length(dim(img)) == 2 || dim(img)[3] == 1) {
@@ -38,12 +39,16 @@ ws_binary <- ifelse(ws > 1, 1, 0)
 # Label the watershed image
 cc <- bwlabel(ws_binary)
 
+# Save the labeled image, this saved Rdata is used in the Manual labeling script.
+save(cc, file = "labeled_LRP.RData")
+
+#displays the labeled image within the plots area of R
 display( colorLabels(cc))
 
 # Convert the labeled image to a data frame
 cc_df <- as.data.frame(as.table(cc))
 
-# Compute the centroid of each label
+# Compute the centroid of each label, this part of the script will output a blank canvas the with integers in the location of the labeled segments.
 centroids <- aggregate(cbind(Var1, Var2) ~ Freq, data = cc_df, FUN = function(x) mean(as.numeric(x)))
 
 # Define your plot and assign it to 'p'
