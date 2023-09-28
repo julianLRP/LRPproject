@@ -1,3 +1,5 @@
+##depricated, old version of integration script
+
 # Load libraries
 library(Seurat)
 library(monocle3)
