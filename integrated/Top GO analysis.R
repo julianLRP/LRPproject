@@ -1,3 +1,5 @@
+##TopGO in combination with org.At.tair.db to find DEG's.
+
 # Load required libraries
 library(topGO)
 library(org.At.tair.db)
