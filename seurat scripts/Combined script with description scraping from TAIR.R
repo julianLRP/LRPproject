@@ -1,3 +1,5 @@
+##script does the same as the script named "Combined script with description scraping from TAIR.R" however it violates the terms and condtions of Arabidopsis.org, so it is advised to not use it.
+
 library(Seurat)
 library(ggplot2)
 library(patchwork)
