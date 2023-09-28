@@ -1,3 +1,5 @@
+##these scripts probably don't work since it was beyond my technical expertise
+
 library(monocle3)
 library(magrittr)
 library(Seurat)
