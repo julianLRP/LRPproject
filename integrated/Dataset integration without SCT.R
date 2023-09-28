@@ -1,3 +1,7 @@
+##Description:
+##This script is dedicated to the integration of multiple datasets: LRP Seurat, a dataset in Monocle format, and a dataset in a .txt format. The integration is performed without using SCT due to conflicts previously experienced with the FindIntegrationAnchors function. 
+##The script performs quality control, normalization, data integration, and visualization using UMAP.
+
 # Load libraries
 library(Seurat)
 library(monocle3)
