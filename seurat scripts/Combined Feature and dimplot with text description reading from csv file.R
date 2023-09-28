@@ -1,3 +1,5 @@
+##forloop to make plots including text description, 
+
 # minimal amount of libraries required to run this part of Seurat pipeline.
 library(Seurat)
 library(ggplot2)
@@ -5,23 +7,8 @@ library(patchwork)
 library(stringr)
 set.seed(42)
 
-# Updated path for the LRP RDS file
-LRP.dataset <- readRDS("C:/Lateral root Primordia R project/Visualization tool/LRP.rds")
-
-
-# Process the LRP dataset
-processed_LRP <- SCTransform(LRP.dataset)
-DefaultAssay(processed_LRP)<- 'RNA'
-processed_LRP <- RunPCA(processed_LRP, verbose = FALSE)
-processed_LRP <- RunUMAP(processed_LRP, dims = 1:50, verbose = FALSE)
-processed_LRP <- FindNeighbors(processed_LRP, dims = 1:50, verbose = FALSE)
-processed_LRP <- FindClusters(processed_LRP, resolution = 1, verbose = FALSE)
-
-# Save the processed LRP dataset
-saveRDS(processed_LRP, 'LRP.processed.rds')
-
 # Load the processed LRP dataset
-processed_LRP <- readRDS("C:/Lateral root Primordia R project/Visualization tool/LRP.processed.rds")
+processed_LRP <- readRDS('Integrated.processed2.rds')
 
 # Read the CSV file
 gene_info_data <- read.csv("gene_info.csv", stringsAsFactors = FALSE)
