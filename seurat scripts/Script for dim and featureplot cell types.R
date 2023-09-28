@@ -1,3 +1,5 @@
+#script is depcrated and replaced with a script that reads the gene info directly from an easily modifible CSV file.
+
 install.packages("Matrix")
 install.packages("Seurat")
 install.packages("dplyr", type = "source")
