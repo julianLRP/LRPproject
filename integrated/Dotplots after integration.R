@@ -1,7 +1,16 @@
+##This script used an CSV file named, gene_info_data, be sure to have this in the working directory
+library(Seurat)
+library(monocle3)
+library(ggplot2)
+library(SeuratWrappers)
+library(SummarizedExperiment)
+library(magrittr)
+library(ggplot2)
+
 # Load gene_info_data
 gene_info_data <- read.csv("gene_info.csv", stringsAsFactors = FALSE)
 
-# Define your list of resolutions
+# Define your list of resolutions, additional resolutions can be chosen and a map of that resolution will be created in the forloop.
 resolutions <- c(0.2, 0.5, 1, 1.5, 2)
 
 # Iterate through unique cell types
