@@ -1,14 +1,14 @@
 #Most important scripts
 
--Manual labeling visualization 2
--Subclustering for earlymapping
--Cell type colours
--Dotplot per celltype
--Dataset integration without SCT
--Quality control seurat
--Modified data scraping with standard clusters included in combined plot
--Combined plot at t set idents res2
--Quality control seurat
+- Manual labeling visualization 2
+- Subclustering for earlymapping
+- Cell type colours
+- Dotplot per celltype
+- Dataset integration without SCT
+- Quality control seurat
+- Modified data scraping with standard clusters included in combined plot
+- Combined plot at t set idents res2
+- Quality control seurat
 
 
 # LRP clustering and spatial visualization Tool
