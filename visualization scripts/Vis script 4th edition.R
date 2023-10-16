@@ -46,7 +46,7 @@ cc <- bwlabel(ws_binary)
 
 # Save the labeled image
 save(cc, file = "labeled_LRP.RData")
-
+  
 # Load the saved cc object
 load("labeled_LRP.RData")
 
@@ -56,41 +56,39 @@ cc_df <- as.data.frame(as.table(cc))
 # Load processed LRP dataset
 processed_LRP <- readRDS('LRP.processed2.rds')
 
-# Assign cluster names to labels randomly
-cluster_names <- Idents(processed_LRP)
-label_to_cluster <- data.frame(
-  label = unique(cc_df$Freq), 
-  cluster = rep(as.character(cluster_names), length.out = length(unique(cc_df$Freq)))
-)
+#manual mapping
+# Read the mapping from the CSV file
+mapping_df <- read.csv("Color_mapping_and_Identity.csv")
+  
+# Extract earlymappingbycelltype values
+label_to_earlymapping <- mapping_df[, c("Label", "earlymappingbycelltype", "LRP_stage")]
 
-#Manual associations between labels and clusters
-#label_to_cluster <- data.frame(
-  #label = c("label1", "label2", "label3", ...),  # replace with your labels
- # cluster = c("cluster1", "cluster2", "cluster3", ...)  # replace with associated clusters
-#)
+colnames(label_to_earlymapping)[which(names(label_to_earlymapping) == "Label")] <- "Freq"
 
-# Merge the label to cluster dataframe with the cc_df dataframe
-cc_df <- merge(cc_df, label_to_cluster, by.x = "Freq", by.y = "label")
+# Merge with cc_df
 
-# Calculate the average gene expression for each pixel
-gene_of_interest <- "AT1G08560"
-avg_gene_expression <- AverageExpression(object = processed_LRP, assays = "RNA", features = gene_of_interest)
+cc_df <- merge(cc_df, label_to_earlymapping, by = "Freq")
 
-# convert avg_gene_expression list into a data frame
-avg_gene_expression <- as.data.frame(avg_gene_expression)
+# Calculate the average gene expression
 
-#reshape this data frame from wide format to long format, making sure to have one row per cluster
-avg_gene_expression <- avg_gene_expression %>% 
-  gather(key = "cluster", value = gene_of_interest)
+gene_of_interest <- "AT2G01420"
 
-#remove the "RNA/integrated" prefix from the cluster column
-avg_gene_expression$cluster <- gsub("RNA.", "", avg_gene_expression$cluster)
-avg_gene_expression$cluster <- gsub("integrated.", "", avg_gene_expression$cluster)
-# replace dots and underscores with spaces in the cluster names
-avg_gene_expression$cluster <- gsub("\\.|_", " ", avg_gene_expression$cluster)
+#calculate avg_expression
+avg_gene_expression <- AverageExpression(object = processed_LRP, assays = "RNA", features = gene_of_interest, group.by = c("earlymappingbycelltype", "LRP_stage"))
 
-# Merge the avg_gene_expression with cc_df
-cc_df <- merge(cc_df, avg_gene_expression, by = "cluster")
+#convert matrix to a long format
+avg_gene_expression_df <- as.data.frame(avg_gene_expression$RNA)
+avg_gene_expression_df <- avg_gene_expression_df %>% 
+  gather(key = 'combined', value = gene_of_interest)
+#separate these into two different columns:
+avg_gene_expression_df$earlymappingbycelltype <- row.names(avg_gene_expression_df)
+avg_gene_expression_df$LRP_stage <- sapply(strsplit(row.names(avg_gene_expression_df), "_"), `[`, 2)
+row.names(avg_gene_expression_df) <- NULL
+
+
+
+#Merge this with cc_df based on "earlymappingbycelltype" and "LRP_stage".
+cc_df <- merge(cc_df, avg_expression_df, by = c("earlymappingbycelltype", "LRP_stage"))
 
 # Set the gene_of_interest value of the pixels with label 0 or 1 to NA this will set all values of the background and the lines to NA.
 cc_df$gene_of_interest[cc_df$Freq %in% c(0, 1)] <- NA
