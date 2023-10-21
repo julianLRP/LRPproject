@@ -13,7 +13,7 @@ library(grid)
 # Read the image
 img <- readImage("LRPstagesall3.png")
 
-# Check if the image is grayscale
+# Check if the image is grayscale consider to manually export the image to grayscale in Inkspace if the code malfunctions here and skip the step.
 if (length(dim(img)) == 2 || dim(img)[3] == 1) {
   # The image is grayscale. You can continue to thresholding.
   print("The image is already grayscale.")
